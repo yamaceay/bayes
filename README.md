@@ -36,17 +36,41 @@ This project requires Python 3.12 or newer.
      pip install .
      ```
 
-After that, you can run the tests to ensure everything is working as expected:
+After that, you can run scripts to ensure everything is working as expected:
 
 ```sh
-uv run bayes_test.py
+uv run -m examples.01_water
 ```
 
 or 
 
 ```sh
-python3 bayes_test.py
+python3 -m examples.01_water
 ```
+
+## Illustrative Use Case
+
+Here's a simple example to illustrate how to use the `Bayes` library:
+
+```python
+from bayes import BayesModel
+
+model = BayesModel.given([
+  {'variable': 'Rain', 'values': [[0.8], [0.2]]},
+  {'variable': 'Sprinkler', 'values': [[0.99, 0.01], [0.6, 0.4]], 'evidences': ['Rain']},
+  {'variable': 'GrassWet', 'values': [[0.9, 0.1, 0.1, 0.01], [0.1, 0.9, 0.9, 0.99]], 'evidences': ['Rain', 'Sprinkler']}
+])
+
+result = model\
+  .when(variables = ['GrassWet'], evidences = {'Rain': 1})\
+  .then()
+
+print(f"Variables: {result.variables}")
+print(f"Evidences: {result.evidences}")
+print(f"Computed Probability Distribution: {result.cpd}")
+```
+
+In this example, we define a simple Bayesian Network with three variables: `Rain`, `Sprinkler`, and `GrassWet`. We then query the probability of `GrassWet` given that `Rain` is true.
 
 ## API Documentation
 
